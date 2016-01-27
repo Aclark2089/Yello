@@ -45,6 +45,19 @@ class BusinessCell: UITableViewCell {
         // Fix thumb image corner radius to rounded
         thumbImageView.layer.cornerRadius = 4
         thumbImageView.clipsToBounds = true
+        
+        // Fix name label width issue
+        nameLabel.preferredMaxLayoutWidth = nameLabel.frame.size.width
+        addressLabel.preferredMaxLayoutWidth = addressLabel.frame.size.width
+    }
+    
+    // Override superclass name label issue
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Fix name label width issue for super
+        nameLabel.preferredMaxLayoutWidth = nameLabel.frame.size.width
+        addressLabel.preferredMaxLayoutWidth = addressLabel.frame.size.width
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
