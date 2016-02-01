@@ -37,7 +37,7 @@ Here's a walkthrough of implemented user stories:
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Most of the challenges for this application came from the segue. For some reason no matter how I sent the Business object over through the segue into the detail view the information would not show. It would constantly say that it was nil when the debugger clearly showed that it was not. I tested it with other statements such as printing out the values I wanted to assign to the text labels and they all correctly printed. I could not figure out what the problem was and all of the methods we have gone over so far in class did not work.
 
 ## License
 
