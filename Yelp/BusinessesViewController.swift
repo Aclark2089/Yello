@@ -12,12 +12,13 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 
     // Outlets
     @IBOutlet var tableView: UITableView!
-    @IBOutlet var searchBar: UISearchBar!
     
     
     // Structs
     var businesses: [Business]!
     var filteredBusinessess: [Business]!
+    
+    lazy var navSearchBar:UISearchBar = UISearchBar(frame: CGRectMake(0, 0, 200, 20))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +28,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.delegate = self
         
         // Delegate Search Bar
-        searchBar.delegate = self
+        navSearchBar.delegate = self
+        
+        self.navigationItem.titleView = navSearchBar
         
         // Figure out height based on autolayout constraints and estimation
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -102,7 +105,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 
 //  Search Func
     
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(navSearchBar: UISearchBar, textDidChange searchText: String) {
         
         var searchBusinesses = [NSDictionary]()
         
