@@ -8,7 +8,8 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchBarDelegate {
+
+class BusinessesViewController: UIViewController, UITableViewDataSource, FiltersViewControllerDelegate {
 
     // Outlets
     @IBOutlet var tableView: UITableView!
@@ -17,7 +18,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     // Structs
     var businesses: [Business]!
     var filteredBusinessess: [Business]!
+    var isMoreDataLoading = false
     
+    // Program our search bar
     lazy var navSearchBar:UISearchBar = UISearchBar(frame: CGRectMake(0, 0, 200, 20))
     
     override func viewDidLoad() {
@@ -30,6 +33,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         // Delegate Search Bar
         navSearchBar.delegate = self
         
+        // Setup search bar in navigation view
         self.navigationItem.titleView = navSearchBar
         
         // Figure out height based on autolayout constraints and estimation
@@ -46,17 +50,6 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
                 print(business.address!)
             }
         })
-
-/* Example of Yelp search with more search options specified
-        Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
-            self.businesses = businesses
-            
-            for business in businesses {
-                print(business.name!)
-                print(business.address!)
-            }
-        }
-*/
     }
 
     override func didReceiveMemoryWarning() {
@@ -65,7 +58,29 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     }
     
 // Tableview Functions
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        let navigationController = segue.destinationViewController as! UINavigationController   
+        let filtersViewController = navigationController.topViewController as! FiltersViewController
+        
+        filtersViewController.delegate = self
+    }
     
+    func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filters: [String : AnyObject]) {
+        var categories = filters["categories"] as? [String]
+        Business.searchWithTerm("Restaurants", sort: .Distance, categories: categories, deals: true) {
+            (businesses:[Business]!, error: NSError!) -> Void in
+            self.businesses = businesses
+            self.filteredBusinessess = businesses
+            self.tableView.reloadData()
+        }
+    }
+
+}
+
+// Table View Extension for Business View Controller
+extension BusinessesViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if filteredBusinessess != nil {
             return filteredBusinessess!.count
@@ -83,32 +98,59 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         return cell
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+}
+
+// Scroll View Extension for Business View Controller
+extension BusinessesViewController: UIScrollViewDelegate {
+    func loadDataOnScroll() {
+        self.isMoreDataLoading = false
         
-        let navigationController = segue.destinationViewController as! UINavigationController   
-        let filtersViewController = navigationController.topViewController as! FiltersViewController
-        
-        filtersViewController.delegate = self
+        // Infinite scroll works here but doesn't have much to load inf. anyway
+        // Could optionally have it keep refreshing the businessess at that particular location but would not make much sense since it would chew up requests and the businesses would not update very quickly
     }
     
-    func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filters: [String : AnyObject]) {
-        var categories = filters["categories"] as? [String]
-        Business.searchWithTerm("Restaurants", sort: .Distance, categories: categories, deals: true) {
-            (businesses:[Business]!, error: NSError!) -> Void in
-            self.businesses = businesses
-            self.tableView.reloadData()
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        if(!isMoreDataLoading){
+            
+            let scrollViewContentHeight = tableView.contentSize.height;
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.dragging) {
+                
+                isMoreDataLoading = true
+                
+                // Code to load more results
+                loadDataOnScroll()
+                scrollView.contentOffset.y = 0
+            }
+            
         }
-        
+    }
+}
 
+// Search Bar Extension for Business View Controller
+extension BusinessesViewController: UISearchBarDelegate {
+    
+    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(true, animated: true)
+        return true;
     }
     
-
-//  Search Func
+    func searchBarShouldEndEditing(searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(false, animated: true)
+        return true;
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.text = ""
+        filteredBusinessess = businesses
+        self.tableView.reloadData()
+        searchBar.resignFirstResponder()
+    }
     
     func searchBar(navSearchBar: UISearchBar, textDidChange searchText: String) {
-        
         var searchBusinesses = [NSDictionary]()
-        
         filteredBusinessess = searchText.isEmpty ? businesses:
             businesses.filter({ (business: Business) -> Bool in
                 return (business.name!).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
@@ -116,7 +158,6 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
         // Reload table
         self.tableView.reloadData()
-        
     }
-
+    
 }
