@@ -15,15 +15,19 @@
                         <viewControllerLayoutGuide type="bottom" id="VBY-gq-v8E"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="XhR-oz-92f">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="QXe-ID-pC4">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="135" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="khS-1A-xwP">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="44" width="320" height="460"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BusinessCell" rowHeight="135" id="RcB-ld-Vc9" customClass="BusinessCell" customModule="Yelp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="92" width="320" height="135"/>
+                                        <rect key="frame" x="0.0" y="28" width="320" height="135"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RcB-ld-Vc9" id="kfN-yY-jZ1" userLabel="View">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="134.5"/>
@@ -121,12 +125,17 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="khS-1A-xwP" firstAttribute="top" secondItem="XhR-oz-92f" secondAttribute="top" id="0rs-tN-U5Y"/>
+                            <constraint firstItem="khS-1A-xwP" firstAttribute="top" secondItem="XhR-oz-92f" secondAttribute="top" constant="44" id="0rs-tN-U5Y"/>
                             <constraint firstItem="VBY-gq-v8E" firstAttribute="top" secondItem="khS-1A-xwP" secondAttribute="bottom" id="4PW-0h-NIx"/>
+                            <constraint firstAttribute="trailing" secondItem="QXe-ID-pC4" secondAttribute="trailing" id="7QY-JJ-dUY"/>
+                            <constraint firstItem="QXe-ID-pC4" firstAttribute="top" secondItem="hR0-74-jRp" secondAttribute="bottom" id="Ber-j8-PSB"/>
                             <constraint firstAttribute="trailing" secondItem="khS-1A-xwP" secondAttribute="trailing" id="CdK-Yl-0et"/>
                             <constraint firstItem="khS-1A-xwP" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="JKj-Zs-MKT"/>
+                            <constraint firstItem="khS-1A-xwP" firstAttribute="top" secondItem="QXe-ID-pC4" secondAttribute="bottom" id="u8m-9S-0px"/>
+                            <constraint firstItem="QXe-ID-pC4" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="yjT-Kz-Ofu"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Yello" id="boL-CW-6VQ">
                         <barButtonItem key="leftBarButtonItem" title="Filters" id="45X-3x-tr4">
                             <connections>
@@ -135,6 +144,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="searchBar" destination="QXe-ID-pC4" id="dk8-hC-a2i"/>
                         <outlet property="tableView" destination="khS-1A-xwP" id="cwB-3m-6lE"/>
                     </connections>
                 </viewController>

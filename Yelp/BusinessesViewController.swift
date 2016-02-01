@@ -8,19 +8,26 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchBarDelegate {
 
     // Outlets
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var searchBar: UISearchBar!
+    
     
     // Structs
     var businesses: [Business]!
+    var filteredBusinessess: [Business]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Delegate Tableviewe
         tableView.dataSource = self
         tableView.delegate = self
+        
+        // Delegate Search Bar
+        searchBar.delegate = self
         
         // Figure out height based on autolayout constraints and estimation
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -28,6 +35,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 
         Business.searchWithTerm("Thai", completion: { (businesses: [Business]!, error: NSError!) -> Void in
             self.businesses = businesses
+            self.filteredBusinessess = businesses
             self.tableView.reloadData()
         
             for business in businesses {
@@ -56,8 +64,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
 // Tableview Functions
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if businesses != nil {
-            return businesses!.count
+        if filteredBusinessess != nil {
+            return filteredBusinessess!.count
         }
         else {
             return 0
@@ -67,7 +75,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("BusinessCell", forIndexPath: indexPath) as! BusinessCell
         
-        cell.business = businesses[indexPath.row]
+        cell.business = filteredBusinessess[indexPath.row]
         
         return cell
     }
@@ -89,6 +97,23 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         }
         
 
+    }
+    
+
+//  Search Func
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        var searchBusinesses = [NSDictionary]()
+        
+        filteredBusinessess = searchText.isEmpty ? businesses:
+            businesses.filter({ (business: Business) -> Bool in
+                return (business.name!).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+            })
+        
+        // Reload table
+        self.tableView.reloadData()
+        
     }
 
 }
