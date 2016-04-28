@@ -39,22 +39,6 @@ Here's a walkthrough of implemented user stories:
 
 Most of the challenges for this application came from the segue. For some reason no matter how I sent the Business object over through the segue into the detail view the information would not show. It would constantly say that it was nil when the debugger clearly showed that it was not. I tested it with other statements such as printing out the values I wanted to assign to the text labels and they all correctly printed. I could not figure out what the problem was and all of the methods we have gone over so far in class did not work.
 
-## License
-
-    Copyright [2016] [R. Alex Clark]
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
 * * *
 
 ### Basic Yelp client
